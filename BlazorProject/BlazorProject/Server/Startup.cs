@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Linq;
+using BlazorProject.Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorProject.Server
 {
@@ -22,7 +24,14 @@ namespace BlazorProject.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppDbContext>(options =>
+                     options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
+
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            services.AddControllers();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
